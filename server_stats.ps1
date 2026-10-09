@@ -31,6 +31,15 @@ $cpu = Get-CimInstance Win32_Processor |
 $cpuUsage = [math]::Round($cpu.Average, 2)
 
 $report += "CPU Usage: $cpuUsage%"
+# CPU usage alert
+if ($cpuUsage -ge 80) {
+    $cpuAlert = "WARNING: High CPU usage detected!"
+    Write-Host $cpuAlert -ForegroundColor Red
+    $report += $cpuAlert
+}
+else {
+    $report += "CPU Status: Normal"
+}
 $report += ""
 
 # Memory usage
@@ -51,6 +60,19 @@ $usedRAM = [math]::Round(
 $report += "Total RAM: $totalRAM GB"
 $report += "Used RAM: $usedRAM GB"
 $report += "Free RAM: $freeRAM GB"
+# RAM usage alert
+$ramUsagePercent = [math]::Round(
+    (($usedRAM / $totalRAM) * 100), 2
+)
+
+if ($ramUsagePercent -ge 80) {
+    $ramAlert = "WARNING: High RAM usage detected! ($ramUsagePercent%)"
+    Write-Host $ramAlert -ForegroundColor Red
+    $report += $ramAlert
+}
+else {
+    $report += "RAM Status: Normal ($ramUsagePercent% used)"
+}
 $report += ""
 
 # Disk usage
